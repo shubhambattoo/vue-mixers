@@ -23,7 +23,7 @@
         </div>
         <div class="field center-align">
           <p v-show="feedback" class="red-text lighten-2">{{feedback}}</p>
-          <button class="btn brown darken-4">Add Cocktail</button>
+          <button class="btn brown darken-4" type="submit">Add Cocktail</button>
         </div>
       </form>
     </div>
@@ -31,6 +31,9 @@
 </template>
 
 <script>
+import db from '@/firebase/init';
+import slugify from 'slugify';
+
 export default {
   name: "AddCocktail",
   data() {
@@ -38,12 +41,42 @@ export default {
       title: null,
       another: null,
       ingredients: [],
-      feedback: null
+      feedback: null,
+      slug : null
     };
   },
   methods: {
-    addCocktail() {
-      console.log(this.title, this.ingredients);
+   addCocktail() {
+      if (this.title) {
+        this.feedback = null;
+
+        // create slug 
+        this.slug = slugify(this.title, {
+          replacement : '-',
+          remove : /[$*_+~.()'""!\-:@]/g,
+          lower : true
+        })
+
+        // create cocktail obj
+        const cocktail = {
+          title : this.title,
+          ingredients : this.ingredients,
+          slug : this.slug
+        }
+
+        // add in db
+        db.collection('cocktails').add(cocktail)
+          .then(() => {
+            this.$router.push({name : 'index'})
+          })
+          .catch((err) => {
+            // eslint-disable-next-line
+            console.log(err)
+          })
+
+      } else {
+        this.feedback = "You must enter a cocktail title"
+      }
     },
     addIngredient() {
       if (this.another) {
@@ -56,7 +89,7 @@ export default {
     },
     spliceIng (index) {
       // console.log(this.ingredients[index])
-      const pos = this.ingredients[index];
+      // const pos = this.ingredients[index];
       this.ingredients.splice(index,1);
     }
   }
