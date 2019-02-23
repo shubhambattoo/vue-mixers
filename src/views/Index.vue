@@ -3,7 +3,7 @@
     <div class="container d-grid">
       <div class="card" v-for="cocktail in cocktails" :key="cocktail.id">
         <div class="card-content">
-          <i class="material-icons" @click="deleteCocktail(cocktail.id)" >delete</i>
+          <i class="material-icons" @click="deleteCocktail(cocktail.id)">delete</i>
           <h3 class="card-title amber-text text-darken-4">{{cocktail.title}}</h3>
           <ul class="ingredients">
             <li v-for="(ingredient, index) in cocktail.ingredients" :key="index">
@@ -18,7 +18,7 @@
 
 <script>
 // @ is an alias to /src
-import db from '@/firebase/init';
+import db from "@/firebase/init";
 
 export default {
   name: "index",
@@ -27,17 +27,33 @@ export default {
       cocktails: []
     };
   },
-  methods : {
-    deleteCocktail (id) {
-      this.cocktails = this.cocktails.filter((cocktail) => cocktail.id !== id)
+  methods: {
+    async deleteCocktail(id) {
+      try {
+        // delete doc from db
+        await db
+          .collection("cocktails")
+          .doc(id)
+          .delete();
+        // created()
+        this.cocktails = this.cocktails.filter(cocktail => cocktail.id !== id);
+      } catch (error) {
+        // eslint-disable-next-line
+        console.error(error);
+      }
     }
   },
-  created () {
+  created() {
     // fetch data from db
-    db.collection('cocktails').get()
+    db.collection("cocktails")
+      .get()
       .then(snapshot => {
-        snapshot.forEach((doc) => console.log(doc.data(), doc.id))
-      })
+        snapshot.forEach(doc => {
+          let cocktail = doc.data();
+          cocktail.id = doc.id;
+          this.cocktails.push(cocktail);
+        });
+      });
   }
 };
 </script>
@@ -69,6 +85,19 @@ export default {
   right: 4px;
   cursor: pointer;
   color: #aaa;
-  font-size:1.4rem;
+  font-size: 1.4rem;
+}
+
+@media screen and (max-width: 768px) {
+  .home .d-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .home .d-grid {
+    grid-template-columns: 1fr;
+    margin-bottom: 30px;
+  }
 }
 </style>
