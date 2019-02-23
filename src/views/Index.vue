@@ -1,9 +1,12 @@
 <template>
   <div class="home">
-    <div class="container d-grid">
+    <div class="progress" v-if="dataIsLoading">
+      <div class="indeterminate"></div>
+    </div>
+    <div class="container d-grid" v-if="!dataIsLoading">
       <div class="card" v-for="cocktail in cocktails" :key="cocktail.id">
         <div class="card-content">
-          <i class="material-icons" @click="deleteCocktail(cocktail.id)">delete</i>
+          <i class="material-icons del" @click="deleteCocktail(cocktail.id)">delete</i>
           <h3 class="card-title amber-text text-darken-4">{{cocktail.title}}</h3>
           <ul class="ingredients">
             <li v-for="(ingredient, index) in cocktail.ingredients" :key="index">
@@ -11,6 +14,11 @@
             </li>
           </ul>
         </div>
+        <button class="btn-floating btn-large halfway-fab waves-effect waves-light brown darken-4">
+          <router-link :to="{name : 'editCocktail', params : {id : cocktail.slug}}">
+            <i class="material-icons">edit</i>
+          </router-link>
+        </button>
       </div>
     </div>
   </div>
@@ -24,7 +32,8 @@ export default {
   name: "index",
   data() {
     return {
-      cocktails: []
+      cocktails: [],
+      dataIsLoading: true
     };
   },
   methods: {
@@ -52,6 +61,7 @@ export default {
           let cocktail = doc.data();
           cocktail.id = doc.id;
           this.cocktails.push(cocktail);
+          this.dataIsLoading = false;
         });
       });
   }
@@ -59,6 +69,9 @@ export default {
 </script>
 
 <style>
+.home .progress {
+  margin-top: 30px;
+}
 .home .d-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -79,7 +92,7 @@ export default {
 .card ul li {
   display: inline-block;
 }
-.card i {
+.card i.del {
   position: absolute;
   top: 4px;
   right: 4px;
