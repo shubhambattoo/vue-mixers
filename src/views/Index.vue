@@ -18,31 +18,26 @@
 
 <script>
 // @ is an alias to /src
+import db from '@/firebase/init';
 
 export default {
   name: "index",
   data() {
     return {
-      cocktails: [
-        {
-          title: "Crantini Cocktail",
-          slug: "crantini-cocktail",
-          ingredients: ["vodka", "cranberry liqueur", "fresh cranberries"],
-          id: "1"
-        },
-        {
-          title: "Cuba Libre",
-          slug: "cuba-libre",
-          ingredients: ["light rum", "lime (juiced)", "Coca-Cola"],
-          id: "2"
-        }
-      ]
+      cocktails: []
     };
   },
   methods : {
     deleteCocktail (id) {
       this.cocktails = this.cocktails.filter((cocktail) => cocktail.id !== id)
     }
+  },
+  created () {
+    // fetch data from db
+    db.collection('cocktails').get()
+      .then(snapshot => {
+        snapshot.forEach((doc) => console.log(doc.data(), doc.id))
+      })
   }
 };
 </script>
