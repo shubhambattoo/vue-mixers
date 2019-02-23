@@ -1,6 +1,8 @@
 .DS_Store
 node_modules
 /dist
+/.firebase
+.firebaserc
 
 # local env files
 .env.local
@@ -19,3 +21,9 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+
+.gitignore
+
+firebase.json
+firestore.rules
+firestore.indexes.json
