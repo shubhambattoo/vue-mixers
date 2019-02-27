@@ -20,9 +20,16 @@
             v-model="another"
             id="ingredient"
           >
+          <i class="material-icons add" v-if="another" @click="addIngredient">add</i>
         </div>
         <div class="field center-align">
           <p v-show="feedback" class="red-text lighten-2">{{feedback}}</p>
+          <button
+            class="btn brown darken-3"
+            id="cancel-button"
+            @click="takeBack"
+            type="button"
+          >Cancel</button>
           <button class="btn brown darken-4" id="add-button" type="submit">Add Cocktail</button>
         </div>
       </form>
@@ -49,7 +56,7 @@ export default {
     addCocktail() {
       if (this.title) {
         this.feedback = null;
-            document.getElementById('add-button').setAttribute('disabled', false);
+        document.getElementById("add-button").setAttribute("disabled", false);
 
         // create slug
         this.slug = slugify(this.title, {
@@ -70,8 +77,9 @@ export default {
           .add(cocktail)
           .then(() => {
             this.$router.push({ name: "index" });
-            document.getElementById('add-button').setAttribute('disabled', false);
-
+            document
+              .getElementById("add-button")
+              .setAttribute("disabled", false);
           })
           .catch(err => {
             // eslint-disable-next-line
@@ -94,6 +102,9 @@ export default {
       // console.log(this.ingredients[index])
       // const pos = this.ingredients[index];
       this.ingredients.splice(index, 1);
+    },
+    takeBack() {
+      this.$router.go(-1);
     }
   }
 };
@@ -112,7 +123,18 @@ export default {
 }
 
 .add-cocktail form .field {
+  position: relative;
   margin: 20px auto;
+}
+
+.add-cocktail form .field i.add {
+  position: absolute;
+  right: 0;
+  top: 30px;
+}
+
+#cancel-button {
+  margin-right: 15px;
 }
 </style>
 

@@ -26,6 +26,12 @@
         </div>
         <div class="field center-align">
           <p v-show="feedback" class="red-text lighten-2">{{feedback}}</p>
+          <button
+            class="btn brown darken-3"
+            id="cancel-button"
+            @click="takeBack"
+            type="button"
+          >Cancel</button>
           <button class="btn brown darken-4" id="edit-button" type="submit">Update Cocktail</button>
         </div>
       </form>
@@ -52,7 +58,7 @@ export default {
     editCocktail() {
       if (this.cocktail.title) {
         this.feedback = null;
-        document.getElementById('edit-button').setAttribute('disabled', true);
+        document.getElementById("edit-button").setAttribute("disabled", true);
 
         // change slug, if required
         this.cocktail.slug = slugify(this.cocktail.title, {
@@ -74,14 +80,14 @@ export default {
           .update(cocktail)
           .then(() => {
             this.$router.push({ name: "index" });
-            document.getElementById('edit-button').setAttribute('disabled', false);
+            document
+              .getElementById("edit-button")
+              .setAttribute("disabled", false);
           })
           .catch(err => {
             // eslint-disable-next-line
             console.log(err);
           });
-
-
       } else {
         this.feedback = "You must enter a cocktail title";
       }
@@ -99,6 +105,9 @@ export default {
       // console.log(this.ingredients[index])
       // const pos = this.ingredients[index];
       this.cocktail.ingredients.splice(index, 1);
+    },
+    takeBack() {
+      this.$router.go(-1);
     }
   },
   created() {
@@ -130,6 +139,10 @@ export default {
 
 .edit-cocktail form .field {
   margin: 20px auto;
+}
+
+#cancel-button {
+  margin-right: 15px;
 }
 </style>
 
