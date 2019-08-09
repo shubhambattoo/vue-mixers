@@ -1,7 +1,7 @@
 # theka-cocktails
 
 ## Project description
-Complete crud abilities for Cocktails, made using VUEjs and firestoredb
+Complete crud abilities for Cocktails, made using VueJS and firestoreDB
 
 [Live demo](https://theka-cocktails.firebaseapp.com/)
 
